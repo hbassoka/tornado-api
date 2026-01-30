@@ -23,38 +23,66 @@ pipeline {
         NEXUS_CREDENTIALS_ID = 'nexus-creds'
         MAVEN_SETTINGS='user-maven-settings'
        
-
         DOCKER_REGISTRY_URL = "nexus.jdevhub.com"
         DOCKER_REGISTRY_CREDENTIALS_ID = 'nexus-creds'
 
+        //  Production Env
         PROD_KUBECONFIG_CREDENTIAL_ID = 'prod-kubeconfig-creds'
-        PROD_SPRING_PROFILES_ACTIVE ='prod'         
-        // Non sensibles (runtime)
-        PROD_DB_URL = 'jdbc:postgresql://172.16.0.40:5432/tornadodb'
-        PROD_DB_USERNAME = 'postgres'
-        PROD_MAIL_SERVER = 'ssl0.ovh.net'
-        PROD_MAIL_PORT = '465'
-        PROD_MAIL_USERNAME = 'admin@jdevhub.com'
-        PROD_KAFKA_SERVERS ='172.16.0.40:9092'
         
-        // Sensibles (stockées dans Jenkins Credentials)
+         // Non sensibles (runtime)
+        PROD_SPRING_PROFILES_ACTIVE ='prod'    
+        
+         // Sensibles (stockées dans Jenkins Credentials)
+        PROD_DB_URL = 'prod-db-url'
+        PROD_DB_USERNAME = 'prod-db-user'
         PROD_DB_PASSWORD = 'prod-db-password'    // Jenkins Credential ID
-        PROD_MAIL_PASSWORD = 'prod-mail-password'
+         
+        PROD_MAIL_SERVER = 'prod-mail-server'
+        PROD_MAIL_PORT = 'prod-mail-port'
+        PROD_MAIL_USERNAME = 'prod-mail-username'
+        PROD_MAIL_PASSWORD = 'prod-mail-password'    
         
+        PROD_KAFKA_SERVERS ='prod-kafka-servers'     
+               
+        PROD_JWT_SECRET_KEY='prod-jwt-secret-key'
+        
+        PROD_GOOGLE_CLIENT_ID='prod-google-client-id'        
+		PROD_GOOGLE_CLIENT_SECRET='prod-google-client-secret'
+		
+		PROD_FACEBOOK_CLIENT_ID='prod-facebook-client-id'
+		PROD_FACEBOOK_CLIENT_SECRET='prod-facebook-client-secret'   
+		
+		
+		
+		//  PréProduction Env
         
         PPROD_KUBECONFIG_CREDENTIAL_ID  = 'dev-kubeconfig-creds'
-        PPROD_SPRING_PROFILES_ACTIVE ='pprod'
+        
         // Non sensibles (runtime)
-        PPROD_DB_URL = 'jdbc:postgresql://172.16.0.30:5432/tornadodb'
-        PPROD_DB_USERNAME = 'postgres'
-        PPROD_MAIL_SERVER = 'ssl0.ovh.net'
-        PPROD_MAIL_PORT = '465'
-        PPROD_MAIL_USERNAME = 'admin@jdevhub.com'
-        PPROD_KAFKA_SERVERS ='172.16.0.30:9092'
+        PPROD_SPRING_PROFILES_ACTIVE ='pprod'
+        // Sensibles (stockées dans Jenkins Credentials)
         
         // Sensibles (stockées dans Jenkins Credentials)
+        PPROD_DB_URL = 'pprod-db-url'
+        PPROD_DB_USERNAME = 'pprod-db-user'
         PPROD_DB_PASSWORD = 'pprod-db-password'    // Jenkins Credential ID
-        PPROD_MAIL_PASSWORD = 'pprod-mail-password'
+         
+        PPROD_MAIL_SERVER = 'pprod-mail-server'
+        PPROD_MAIL_PORT = 'pprod-mail-port'
+        PPROD_MAIL_USERNAME = 'pprod-mail-username'
+        PPROD_MAIL_PASSWORD = 'pprod-mail-password'    
+        
+        PPROD_KAFKA_SERVERS ='pprod-kafka-servers'     
+                                
+        PPROD_JWT_SECRET_KEY='pprod-jwt-secret-key'
+        
+        PPROD_GOOGLE_CLIENT_ID='pprod-google-client-id'        
+		PPROD_GOOGLE_CLIENT_SECRET='pprod-google-client-secret'
+		
+		PPROD_FACEBOOK_CLIENT_ID='pprod-facebook-client-id'
+		PPROD_FACEBOOK_CLIENT_SECRET='pprod-facebook-client-secret'   
+        
+        
     }
 
     tools {
@@ -76,14 +104,7 @@ pipeline {
                     // Variables dynamiques selon la branche
                     // Stocker dans env pour les étapes suivantes
                     env.SPRING_PROFILES_ACTIVE = (params.BRANCH_TO_BUILD == 'preproduction') ? env.PPROD_SPRING_PROFILES_ACTIVE : env.PROD_SPRING_PROFILES_ACTIVE
-                    env.DB_URL                 = (params.BRANCH_TO_BUILD == 'preproduction') ? env.PPROD_DB_URL : env.PROD_DB_URL
-                    env.DB_USERNAME            = (params.BRANCH_TO_BUILD == 'preproduction') ? env.PPROD_DB_USERNAME : env.PROD_DB_USERNAME
-                    env.MAIL_SERVER            = (params.BRANCH_TO_BUILD == 'preproduction') ? env.PPROD_MAIL_SERVER : env.PROD_MAIL_SERVER
-                    env.MAIL_PORT              = (params.BRANCH_TO_BUILD == 'preproduction') ? env.PPROD_MAIL_PORT : env.PROD_MAIL_PORT
-                    env.MAIL_USERNAME          = (params.BRANCH_TO_BUILD == 'preproduction') ? env.PPROD_MAIL_USERNAME : env.PROD_MAIL_USERNAME
-                    env.KAFKA_SERVERS          = (params.BRANCH_TO_BUILD == 'preproduction') ? env.PPROD_KAFKA_SERVERS : env.PROD_KAFKA_SERVERS
                     
-
                     echo "Environment variables set for branch ${params.BRANCH_TO_BUILD}"
                 }
             }
@@ -248,22 +269,93 @@ pipeline {
 
     steps {
         script {
+			
+			
             def kubeCred = (params.BRANCH_TO_BUILD == 'production')
                 ? env.PROD_KUBECONFIG_CREDENTIAL_ID
                 : env.PPROD_KUBECONFIG_CREDENTIAL_ID
 
-             def dbPassword = (params.BRANCH_TO_BUILD == 'production')
+           // Database properties
+           
+           def dbUrl = (params.BRANCH_TO_BUILD == 'preproduction') 
+               ? env.PPROD_DB_URL 
+               : env.PROD_DB_URL
+           
+           def dbUser = (params.BRANCH_TO_BUILD == 'preproduction') 
+              ? env.PPROD_DB_USERNAME 
+              : env.PROD_DB_USERNAME
+                    
+                    
+           def dbPassword = (params.BRANCH_TO_BUILD == 'production')
                 ? env.PROD_DB_PASSWORD
-                : env.PPROD_DB_PASSWORD
-                
-             def mailPassword = (params.BRANCH_TO_BUILD == 'production')
+                : env.PPROD_DB_PASSWORD            
+            
+            
+            // Mail server properties
+            
+            def mailServer  = (params.BRANCH_TO_BUILD == 'preproduction') 
+               ? env.PPROD_MAIL_SERVER 
+               : env.PROD_MAIL_SERVER
+               
+            def mailPort = (params.BRANCH_TO_BUILD == 'preproduction') 
+               ? env.PPROD_MAIL_PORT 
+               : env.PROD_MAIL_PORT
+               
+            def mailUsername  = (params.BRANCH_TO_BUILD == 'preproduction')
+               ? env.PPROD_MAIL_USERNAME 
+               : env.PROD_MAIL_USERNAME
+                        
+            def mailPassword = (params.BRANCH_TO_BUILD == 'production')
                 ? env.PROD_MAIL_PASSWORD
                 : env.PPROD_MAIL_PASSWORD
 
+            // Kafka properties
+                    
+            def kafkaServers  = (params.BRANCH_TO_BUILD == 'preproduction') 
+                ? env.PPROD_KAFKA_SERVERS 
+                : env.PROD_KAFKA_SERVERS
+
+            // JWT TOken  properties
+            
+            
+             def jwtSecretKey = (params.BRANCH_TO_BUILD == 'preproduction') 
+	             ? env.PPROD_JWT_SECRET_KEY 
+	             : env.PROD_JWT_SECRET_KEY
+                          
+             // GOOGLE OAUTH2  properties
+             def googleClientId = (params.BRANCH_TO_BUILD == 'preproduction') 
+	             ? env.PPROD_GOOGLE_CLIENT_ID 
+	             : env.PROD_GOOGLE_CLIENT_ID
+             
+             def googleClientSecret = (params.BRANCH_TO_BUILD == 'preproduction')
+	              ? env.PPROD_GOOGLE_CLIENT_SECRET 
+	              : env.PROD_GOOGLE_CLIENT_SECRET
+	      	              
+	         // FACBOOK OAUTH2  properties
+	         
+             def facebookClientId     = (params.BRANCH_TO_BUILD == 'preproduction') 
+	             ? env.PPROD_FACEBOOK_CLIENT_ID 
+	             : env.PROD_FACEBOOK_CLIENT_ID
+             
+             def facebookClientSecret = (params.BRANCH_TO_BUILD == 'preproduction') 
+	             ? env.PPROD_FACEBOOK_CLIENT_SECRET 
+	             : env.PROD_FACEBOOK_CLIENT_SECRET
+
             withCredentials([
                 file(credentialsId: kubeCred, variable: 'KUBECONFIG'),
-                string(credentialsId: dbPassword, variable: 'DB_PASSWORD'),
-                string(credentialsId: mailPassword, variable: 'MAIL_PASSWORD')
+                string(credentialsId: dbUrl, variable: 'DB_URL'),
+                string(credentialsId: dbUser, variable: 'DB_USERNAME'),
+                string(credentialsId: dbPassword, variable: 'DB_PASSWORD'),   
+                string(credentialsId: mailServer, variable: 'MAIL_SERVER'),
+                string(credentialsId: mailPort, variable: 'MAIL_PORT'),
+                string(credentialsId: mailUsername, variable: 'MAIL_USERNAME'),
+                string(credentialsId: mailPassword, variable: 'MAIL_PASSWORD'),
+                string(credentialsId: kafkaServers, variable: 'KAFKA_SERVERS'),                
+                string(credentialsId: jwtSecretKey, variable: 'JWT_SECRET_KEY'),
+                string(credentialsId: googleClientId, variable: 'GOOGLE_CLIENT_ID'),
+                string(credentialsId: googleClientSecret, variable: 'GOOGLE_CLIENT_SECRET'),
+                string(credentialsId: facebookClientId, variable: 'FACEBOOK_CLIENT_ID'),
+                string(credentialsId: facebookClientSecret, variable: 'FACEBOOK_CLIENT_SECRET')
             ]) {
 
                 sh """
@@ -273,18 +365,23 @@ pipeline {
                 envsubst < k8s/deployment.yaml | kubectl delete -f - --ignore-not-found
 
                 kubectl create configmap tornado-api-config \
-                  --from-literal=SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE \
+                  --from-literal=SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE \                  
+                  --dry-run=client -o yaml | kubectl apply -f -
+
+                kubectl create secret generic tornado-api-secrets \
                   --from-literal=DB_URL=$DB_URL \
                   --from-literal=DB_USERNAME=$DB_USERNAME \
                   --from-literal=MAIL_SERVER=$MAIL_SERVER \
                   --from-literal=MAIL_PORT=$MAIL_PORT \
                   --from-literal=MAIL_USERNAME=$MAIL_USERNAME \
                   --from-literal=KAFKA_SERVERS=$KAFKA_SERVERS \
-                  --dry-run=client -o yaml | kubectl apply -f -
-
-                kubectl create secret generic tornado-api-secrets \
                   --from-literal=DB_PASSWORD=$DB_PASSWORD \
                   --from-literal=MAIL_PASSWORD=$MAIL_PASSWORD \
+                  --from-literal=JWT_SECRET_KEY=$JWT_SECRET_KEY \
+                  --from-literal=GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID \
+                  --from-literal=GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET \
+                  --from-literal=FACEBOOK_CLIENT_ID=$FACEBOOK_CLIENT_ID \
+                  --from-literal=FACEBOOK_CLIENT_SECRET=$FACEBOOK_CLIENT_SECRET \
                   --dry-run=client -o yaml | kubectl apply -f -
 
                 envsubst < k8s/deployment.yaml | kubectl apply -f -

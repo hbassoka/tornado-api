@@ -31,47 +31,88 @@ spec:
                 configMapKeyRef:
                   name: tornado-api-config
                   key: SPRING_PROFILES_ACTIVE
+                  
+           # Variables sensibles via secret
             - name: DB_URL
               valueFrom:
                 configMapKeyRef:
-                  name: tornado-api-config
+                  name: tornado-api-secrets
                   key: DB_URL
+                  
             - name: DB_USERNAME
               valueFrom:
                 configMapKeyRef:
-                  name: tornado-api-config
+                  name: tornado-api-secrets
                   key: DB_USERNAME
-            - name: MAIL_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: tornado-api-config
-                  key: MAIL_SERVER
-            - name: MAIL_USERNAME
-              valueFrom:
-                configMapKeyRef:
-                  name: tornado-api-config
-                  key: MAIL_USERNAME
-            - name: MAIL_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: tornado-api-config
-                  key: MAIL_PORT
-            - name: KAFKA_SERVERS
-              valueFrom:
-                configMapKeyRef:
-                  name: tornado-api-config
-                  key: KAFKA_SERVERS
-            # Variables sensibles via secret
+
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: tornado-api-secrets
-                  key: DB_PASSWORD            
+                  key: DB_PASSWORD     
+                                    
+            - name: MAIL_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: tornado-api-secrets
+                  key: MAIL_SERVER
+                  
+            - name: MAIL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: tornado-api-secrets
+                  key: MAIL_PORT
+                  
+            - name: MAIL_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: tornado-api-secrets
+                  key: MAIL_USERNAME
+                  
+                  
             - name: MAIL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: tornado-api-secrets
-                  key: MAIL_PASSWORD           
+                  key: MAIL_PASSWORD
+                                                      
+            - name: KAFKA_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: tornado-api-secrets
+                  key: KAFKA_SERVERS
+                  
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: tornado-api-secrets
+                  key: JWT_SECRET_KEY    
+                             
+                             
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: tornado-api-secrets
+                  key: GOOGLE_CLIENT_ID   
+                         
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: tornado-api-secrets
+                  key: GOOGLE_CLIENT_SECRET
+                        
+                        
+            - name: FACEBOOK_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: tornado-api-secrets
+                  key: FACEBOOK_CLIENT_IDD
+                                  
+            - name: FACEBOOK_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: tornado-api-secrets
+                  key: FACEBOOK_CLIENT_SECRET             
 ---
 # --------------------------------------
 # Service NodePort pour exposer le backend
