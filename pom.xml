@@ -4,11 +4,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.jdevhub</groupId>
-	<artifactId>intranet-api</artifactId>
-	<version>2.0.0-SNAPSHOT</version>
+	<artifactId>tornado-api</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>intranet-api</name>
-	<description>intranet-api</description>
+	<name>tornado-api</name>
+	<description>tornado-api</description>
 
 	<properties>
 		<java.version>21</java.version>
@@ -31,12 +31,12 @@
 	</parent>
 	<scm>
 		<connection>
-			scm:git:ssh://git@gitlab.jdevhub.com/dev/backend/intranet-api.git
+			scm:git:ssh://git@github.com/hbassoka/tornado-api.git
 		</connection>
 		<developerConnection>
-			scm:git:ssh://git@gitlab.jdevhub.com/dev/backend/intranet-api.git
+			scm:git:ssh://git@github.com/hbassoka/torado-api.git
 		</developerConnection>
-		<url>https://gitlab.jdevhub.com/dev/backend/intranet-api</url>
+		<url>https://github.com/hbassoka/tornado-api</url>
 	</scm>
 
 	<ciManagement>
