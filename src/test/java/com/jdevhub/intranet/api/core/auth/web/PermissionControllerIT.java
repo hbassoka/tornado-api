@@ -9,7 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import com.jdevhub.intranet.api.core.security.config.AuthPersistenceTestConfig;
 import com.jdevhub.intranet.api.core.security.config.AuthServiceTestConfig;
-import com.jdevhub.intranet.api.core.security.web.PermissionController;
+import com.jdevhub.tornado.api.core.security.web.PermissionController;
 
 @ContextConfiguration(classes= {AuthPersistenceTestConfig.class,AuthServiceTestConfig.class})
 @DataJpaTest

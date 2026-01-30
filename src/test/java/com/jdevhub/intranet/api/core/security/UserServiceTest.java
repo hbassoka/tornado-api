@@ -9,13 +9,13 @@ import java.util.List;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.jdevhub.intranet.api.core.security.domain.dto.UserDto;
 import com.jdevhub.intranet.api.core.security.domain.mapper.UserMapperImpl;
-import com.jdevhub.intranet.api.core.security.domain.model.User;
-import com.jdevhub.intranet.api.core.security.domain.repository.GroupRepository;
-import  com.jdevhub.intranet.api.core.security.domain.repository.UserRepository;
-import com.jdevhub.intranet.api.core.security.service.UserService;
-import com.jdevhub.intranet.api.core.security.service.impl.UserServiceImpl;
+import com.jdevhub.tornado.api.core.security.domain.dto.UserDto;
+import com.jdevhub.tornado.api.core.security.domain.model.User;
+import com.jdevhub.tornado.api.core.security.domain.repository.GroupRepository;
+import com.jdevhub.tornado.api.core.security.domain.repository.UserRepository;
+import com.jdevhub.tornado.api.core.security.service.UserService;
+import com.jdevhub.tornado.api.core.security.service.impl.UserServiceImpl;
 
 
 @SpringBootTest

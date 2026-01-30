@@ -12,7 +12,7 @@ pipeline {
     environment {
 		
 
-        GIT_REPO_URL = 'https://gitlab.jdevhub.com/dev/backend/intranet-api.git'
+        GIT_REPO_URL = 'https://github.com/hbassoka/tornado-api.git'
 
         GIT_CREDENTIALS_ID = 'gitlab_creds'
         TAG_PREFIX = 'release-'
@@ -30,7 +30,7 @@ pipeline {
         PROD_KUBECONFIG_CREDENTIAL_ID = 'prod-kubeconfig-creds'
         PROD_SPRING_PROFILES_ACTIVE ='prod'         
         // Non sensibles (runtime)
-        PROD_DB_URL = 'jdbc:postgresql://172.16.0.40:5432/intranetdb'
+        PROD_DB_URL = 'jdbc:postgresql://172.16.0.40:5432/tornadodb'
         PROD_DB_USERNAME = 'postgres'
         PROD_MAIL_SERVER = 'ssl0.ovh.net'
         PROD_MAIL_PORT = '465'
@@ -45,7 +45,7 @@ pipeline {
         PPROD_KUBECONFIG_CREDENTIAL_ID  = 'dev-kubeconfig-creds'
         PPROD_SPRING_PROFILES_ACTIVE ='pprod'
         // Non sensibles (runtime)
-        PPROD_DB_URL = 'jdbc:postgresql://172.16.0.30:5432/intranetdb'
+        PPROD_DB_URL = 'jdbc:postgresql://172.16.0.30:5432/tornadodb'
         PPROD_DB_USERNAME = 'postgres'
         PPROD_MAIL_SERVER = 'ssl0.ovh.net'
         PPROD_MAIL_PORT = '465'
@@ -268,11 +268,11 @@ pipeline {
 
                 sh """
                 
-                kubectl delete configmap intranet-api-config --ignore-not-found
-                kubectl delete secret intranet-api-secrets --ignore-not-found
+                kubectl delete configmap tornado-api-config --ignore-not-found
+                kubectl delete secret tornado-api-secrets --ignore-not-found
                 envsubst < k8s/deployment.yaml | kubectl delete -f - --ignore-not-found
 
-                kubectl create configmap intranet-api-config \
+                kubectl create configmap tornado-api-config \
                   --from-literal=SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE \
                   --from-literal=DB_URL=$DB_URL \
                   --from-literal=DB_USERNAME=$DB_USERNAME \
@@ -282,7 +282,7 @@ pipeline {
                   --from-literal=KAFKA_SERVERS=$KAFKA_SERVERS \
                   --dry-run=client -o yaml | kubectl apply -f -
 
-                kubectl create secret generic intranet-api-secrets \
+                kubectl create secret generic tornado-api-secrets \
                   --from-literal=DB_PASSWORD=$DB_PASSWORD \
                   --from-literal=MAIL_PASSWORD=$MAIL_PASSWORD \
                   --dry-run=client -o yaml | kubectl apply -f -

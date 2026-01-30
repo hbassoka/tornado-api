@@ -24,8 +24,8 @@ app:
         client-secret: ${GOOGLE_CLIENT_SECRET}
 
       facebook:
-        client-id: ${GOOGLE_CLIENT_ID}
-        client-secret: ${GOOGLE_CLIENT_SECRET}
+        client-id: ${FACEBOOK_CLIENT_ID}
+        client-secret: ${FACEBOOK_CLIENT_SECRET}
 
       authorizedRedirectUris:
         - ${OAUTH2_REDIRECT_URI_CLIENT:http://localhost:4200/auth/callback}

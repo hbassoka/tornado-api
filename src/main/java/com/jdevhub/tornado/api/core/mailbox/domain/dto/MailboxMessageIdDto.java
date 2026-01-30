@@ -1,0 +1,5 @@
+package com.jdevhub.tornado.api.core.mailbox.domain.dto;
+
+public record MailboxMessageIdDto(MailboxDto mailboxDto, MessageDto messageDto) {
+
+}

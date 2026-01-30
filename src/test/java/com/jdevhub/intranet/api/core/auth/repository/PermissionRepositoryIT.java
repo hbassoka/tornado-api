@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.jdevhub.intranet.api.core.security.config.AuthPersistenceTestConfig;
-import com.jdevhub.intranet.api.core.security.domain.repository.PermissionRepository;
+import com.jdevhub.tornado.api.core.security.domain.repository.PermissionRepository;
 
 @ContextConfiguration(classes= {AuthPersistenceTestConfig.class})
 @DataJpaTest
