@@ -1,8 +1,4 @@
 app:
-  mail:
-    from: ${MAIL_FROM:no-reply@itbizconsulting.fr}
-    to: ${MAIL_TO:support@itbizconsulting.fr}
-
   kafka:
     topic:
       confirmation-email: email-confirmation-topic
@@ -143,4 +139,4 @@ logging:
   pattern:
     console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
   file:
-    name: /logs/intranet-backend.log
+    name: /logs/tornado-backend.log

@@ -1,3 +1,16 @@
+app:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}     
+
+    oauth2:
+      google:
+        client-id: ${GOOGLE_CLIENT_ID}
+        client-secret: ${GOOGLE_CLIENT_SECRET}
+
+      facebook:
+        client-id: ${FACEBOOK_CLIENT_ID}
+        client-secret: ${FACEBOOK_CLIENT_SECRET}
 spring:
   config:
     activate:
