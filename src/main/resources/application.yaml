@@ -1,0 +1,146 @@
+app:
+  mail:
+    from: ${MAIL_FROM:no-reply@itbizconsulting.fr}
+    to: ${MAIL_TO:support@itbizconsulting.fr}
+
+  kafka:
+    topic:
+      confirmation-email: email-confirmation-topic
+
+  frontend-success-url: http://localhost:4200
+
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}
+      access-token-key: access_token
+      refresh-token-key: refresh_token
+      expiration: 900000          # 15 minutes
+      refresh-token:
+        expiration: 604800000     # 7 jours
+
+    oauth2:
+      google:
+        client-id: ${GOOGLE_CLIENT_ID}
+        client-secret: ${GOOGLE_CLIENT_SECRET}
+
+      facebook:
+        client-id: ${GOOGLE_CLIENT_ID}
+        client-secret: ${GOOGLE_CLIENT_SECRET}
+
+      authorizedRedirectUris:
+        - ${OAUTH2_REDIRECT_URI_CLIENT:http://localhost:4200/auth/callback}
+        - ${OAUTH2_REDIRECT_URI_ANDROID:myandroidapp://oauth2/redirect}
+        - ${OAUTH2_REDIRECT_URI_IOS:myiosapp://oauth2/redirect}
+
+management:
+  endpoints:
+    web:
+      base-path: /api/actuator
+      exposure:
+        include: health,info,mappings
+        exclude: env,beans,metrics
+  endpoint:
+    health:
+      show-details: always
+
+server:
+  ssl:
+    enabled: false
+    protocol: TLS
+  tomcat:
+    threads:
+      max: 500
+      min-spare: 50
+    max-connections: 1000
+    max-swallow-size: 50MB
+    max-http-form-post-size: 50MB
+    connection-timeout: 60000
+    accesslog:
+      enabled: true
+      directory: logs
+      prefix: access_log
+      suffix: .log
+      file-date-format: yyyy-MM-dd
+      pattern: '%h %l %u %t "%r" %s %b "%{Referer}i" "%{User-Agent}i"'
+
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 3
+      idle-timeout: 30000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+      pool-name: Dev-HikariPool
+      connection-test-query: SELECT 1
+      auto-commit: true
+  main:
+    allow-circular-references: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  jpa:
+    open-in-view: false    
+    hibernate:
+      ddl-auto: update
+  sql:
+    init:
+      mode: never
+  mvc:
+    log-request-details: false
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVERS}
+
+    producer:
+      acks: all
+      retries: 10
+      batch-size: 65536
+      buffer-memory: 268435456
+      compression-type: lz4
+      linger-ms: 10
+      max-in-flight-requests-per-connection: 1
+      enable-idempotence: true
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+    consumer:
+      group-id: activation-group
+      enable-auto-commit: false
+      auto-offset-reset: latest
+      max-poll-records: 500
+      fetch-min-size: 1048576
+      fetch-max-wait: 500
+      heartbeat-interval: 3000
+      max-poll-interval-ms: 300000
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.jdevhub.activation.model
+        spring.json.use.type.headers: false
+
+    listener:
+      ack-mode: manual
+
+  mail:
+    host: ${MAIL_SERVER}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+springdoc:
+  swagger-ui:
+    path: /api/swagger-ui.html
+  api-docs:
+    path: /api/v3/api-docs
+
+logging:
+  level:
+    root: info
+    org.springframework.web: info
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+  file:
+    name: /logs/intranet-backend.log

@@ -1,0 +1,51 @@
+stages:
+  - build
+  - test
+  - sonar
+  - package
+
+
+variables:
+  MAVEN_CLI_OPTS: "-B -DskipTests"
+  MAVEN_TEST_OPTS: "-B"  
+  SONAR_LOGIN: $SONAR_TOKEN                         # Token à définir dans GitLab CI/CD settings
+
+cache:
+  paths:
+    - .m2/repository/
+
+before_script:
+  - [ "echo"," Branche : $CI_COMMIT_BRANCH"]
+  - [ "echo"," Date : $(date)"]
+build:
+  stage: build
+  image: maven:3.9.6-eclipse-temurin-17
+  script:
+    - mvn $MAVEN_CLI_OPTS clean compile
+
+test:
+  stage: test
+  image: maven:3.9.6-eclipse-temurin-17
+  script:
+    - mvn $MAVEN_TEST_OPTS test
+
+sonarqube:
+  stage: sonar
+  image: maven:3.9.6-eclipse-temurin-17
+  script:
+    - mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN
+  only:
+    - master
+    - develop
+    - merge_requests
+
+package:
+  stage: package
+  image: maven:3.9.6-eclipse-temurin-17
+  script:
+    - mvn $MAVEN_CLI_OPTS package
+  artifacts:
+    paths:
+      - target/*.jar
+    expire_in: 1h
+

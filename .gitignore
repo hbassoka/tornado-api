@@ -1,0 +1,6 @@
+/target/
+/.project
+/.classpath
+/.settings/
+/hs_err_pid24060.log
+/replay_pid24060.log

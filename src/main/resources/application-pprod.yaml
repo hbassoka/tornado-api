@@ -1,0 +1,20 @@
+spring:
+  config:
+    activate:
+      on-profile: pprod
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      pool-name: PProd-HikariPool
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVERS}
+  mail:
+    host: ${MAIL_SERVER}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}

@@ -1,0 +1,8 @@
+DB_PASSWORD=?31M@rs1975!
+DB_URL=jdbc:postgresql://172.16.0.30:5432/intranetdb
+DB_USERNAME=postgres
+KAFKA_SERVERS=172.16.0.30:9092
+MAIL_PASSWORD=?31M@rs1975!
+MAIL_PORT=465
+MAIL_SERVER=ss0l.ovh.net
+MAIL_USERNAME=admin@jdevhub.com

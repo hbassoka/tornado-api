@@ -1,0 +1,93 @@
+# --------------------------------------
+# Déploiement de l'application backend
+# --------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intranet-api
+  labels:
+    app: intranet-api
+spec:
+  replicas: 2  # Nombre de pods à exécuter
+  selector:
+    matchLabels:
+      app: intranet-api
+  template:
+    metadata:
+      labels:
+        app: intranet-api
+    spec:
+      containers:
+        - name: intranet-api
+          image: nexus.jdevhub.com/intranet-api:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            # Variables non sensibles
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: intranet-api-config
+                  key: SPRING_PROFILES_ACTIVE
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: intranet-api-config
+                  key: DB_URL
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: intranet-api-config
+                  key: DB_USERNAME
+            - name: MAIL_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: intranet-api-config
+                  key: MAIL_SERVER
+            - name: MAIL_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: intranet-api-config
+                  key: MAIL_USERNAME
+            - name: MAIL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: intranet-api-config
+                  key: MAIL_PORT
+            - name: KAFKA_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: intranet-api-config
+                  key: KAFKA_SERVERS
+            # Variables sensibles via secret
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: intranet-api-secrets
+                  key: DB_PASSWORD            
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: intranet-api-secrets
+                  key: MAIL_PASSWORD           
+---
+# --------------------------------------
+# Service NodePort pour exposer le backend
+# --------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: intranet-api
+  labels:
+    app: intranet-api
+spec:
+  type: NodePort  # Expose le service sur un port de chaque nœud
+  selector:
+    app: intranet-api
+  ports:
+    - name: http
+      port: 8080        # Port sur lequel le service est exposé dans le cluster
+      targetPort: 8080  # Port cible dans les pods
+      nodePort: 30090   # Port accessible depuis l’extérieur du cluster (NodeIP:30090)
