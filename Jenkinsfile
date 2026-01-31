@@ -14,7 +14,7 @@ pipeline {
 
         GIT_REPO_URL = 'https://github.com/hbassoka/tornado-api.git'
 
-        GIT_CREDENTIALS_ID = 'gitlab_creds'
+        GITHUB_CREDENTIALS_ID = 'github_creds'
         TAG_PREFIX = 'release-'
 
         SONARQUBE_ENV  = 'SonarQubeServer'
@@ -119,7 +119,7 @@ pipeline {
                     extensions: [[$class: 'WipeWorkspace']], // force clean
                     userRemoteConfigs: [[
                         url: "${env.GIT_REPO_URL}",
-                        credentialsId: "${env.GIT_CREDENTIALS_ID}"
+                        credentialsId: "${env.GITHUB_CREDENTIALS_ID}"
                     ]]
                 ])
             }
