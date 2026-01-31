@@ -365,7 +365,7 @@ pipeline {
                 envsubst < k8s/deployment.yaml | kubectl delete -f - --ignore-not-found
 
                 kubectl create configmap tornado-api-config \
-                  --from-literal=SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE \                  
+                  --from-literal=SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE \
                   --dry-run=client -o yaml | kubectl apply -f -
 
                 kubectl create secret generic tornado-api-secrets \
