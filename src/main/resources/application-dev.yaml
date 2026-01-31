@@ -17,7 +17,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: ${DB_URL}/tornadodb
+    url: ${DB_URL}/intranetdb
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
