@@ -28,7 +28,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.jdevhub.tornado.api.core.auth.service.AuthService;
+import com.jdevhub.tornado.api.auth.service.AuthService;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 
 

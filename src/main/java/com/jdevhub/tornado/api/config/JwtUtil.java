@@ -11,9 +11,9 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.jdevhub.tornado.api.core.auth.domain.dto.AppUser;
-import com.jdevhub.tornado.api.core.auth.domain.dto.FacebookUser;
-import com.jdevhub.tornado.api.core.auth.domain.dto.GoogleUser;
+import com.jdevhub.tornado.api.auth.domain.dto.AppUser;
+import com.jdevhub.tornado.api.auth.domain.dto.FacebookUser;
+import com.jdevhub.tornado.api.auth.domain.dto.GoogleUser;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;

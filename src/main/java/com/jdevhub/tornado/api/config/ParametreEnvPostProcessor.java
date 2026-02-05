@@ -8,7 +8,7 @@ import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 
-import com.jdevhub.tornado.api.shared.domain.repository.ParametreRepository;
+import com.jdevhub.tornado.api.common.domain.repository.ParametreRepository;
 
 public class ParametreEnvPostProcessor implements EnvironmentPostProcessor {
 
